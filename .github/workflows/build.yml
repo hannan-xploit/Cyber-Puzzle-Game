@@ -14,16 +14,17 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          sudo apt-get install -y python3-pip python3-venv git
           pip3 install --upgrade pip
-          pip3 install buildozer cython
+          pip3 install --user --upgrade buildozer cython
 
       - name: Build with Buildozer
         run: |
-          # SDK license accept karne ke liye ye command zaroori hai
+          # Buildozer ko path mein add karna
+          export PATH=$PATH:~/.local/bin
           buildozer android debug
         env:
-          # Yeh environment variable buildozer ko batata hai ke license accept kar lo
+          # SDK license accept karne ke liye
           ANDROIDSDK_ACCEPT_LICENSE: "1"
 
       - name: Upload Artifact
