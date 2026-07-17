@@ -21,8 +21,7 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # Cache saaf karne ke liye clean command add ki hai
-          buildozer clean
+          # Clean ki jagah hum direct build chala rahe hain
           buildozer -v android debug
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
