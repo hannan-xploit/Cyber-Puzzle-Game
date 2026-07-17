@@ -21,8 +21,8 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # Clean kar rahe hain taake purani gandi files hat jayein
-          buildozer android clean
+          # Purani corrupt cache ko forcefully remove kar rahe hain
+          rm -rf .buildozer
           buildozer -v android debug
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
