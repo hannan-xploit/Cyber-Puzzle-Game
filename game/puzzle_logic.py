@@ -65,6 +65,7 @@ class Grid:
         self.sparks = []
         self.start_time = time.time()
         self.elapsed = 0
+        self.move_history = []
         self.reset_positions()
 
     # ---------------------------------------------------------- assets
@@ -93,6 +94,7 @@ class Grid:
         self.won = False
         self.start_time = time.time()
         self.elapsed = 0
+        self.move_history = []
 
     def tile_size(self):
         return BOARD_SIZE // self.grid_size
@@ -120,6 +122,7 @@ class Grid:
         self.strokes = 0
         self.won = False
         self.start_time = time.time()
+        self.move_history = []
 
     # ---------------------------------------------------------- input
     def handle_click(self, pos):
@@ -127,12 +130,16 @@ class Grid:
             return
         for p, tile in list(self.tiles.items()):
             if tile.rect.collidepoint(pos) and abs(p[0] - self.empty_pos[0]) + abs(p[1] - self.empty_pos[1]) == 1:
+                old_empty = self.empty_pos
                 tile.target_rect = self.slot_rect(self.empty_pos)
                 self.tiles[self.empty_pos] = tile
                 del self.tiles[p]
                 new_pos = self.empty_pos
                 self.empty_pos = p
                 self.strokes += 1
+
+                # remember this move so it can be undone later
+                self.move_history.append((p, old_empty))
 
                 # sparkle burst if the tile landed on its correct spot
                 if tile.is_correct(new_pos):
@@ -141,6 +148,19 @@ class Grid:
 
                 self.check_win()
                 break
+
+    def undo(self):
+        """Reverse the last move the player made (shuffle moves are not undoable)."""
+        if not self.move_history or self.won:
+            return
+        original_pos, tile_now_at = self.move_history.pop()
+        if self.empty_pos != original_pos or tile_now_at not in self.tiles:
+            return  # safety guard - state didn't match what we expect
+        tile = self.tiles.pop(tile_now_at)
+        tile.target_rect = self.slot_rect(original_pos)
+        self.tiles[original_pos] = tile
+        self.empty_pos = tile_now_at
+        self.strokes = max(0, self.strokes - 1)
 
     def move_tile_at(self, pos):
         """Programmatic move used by hint/auto-play (same rule as a click)."""

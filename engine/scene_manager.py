@@ -54,7 +54,6 @@ class SceneManager:
         self.state = MENU
         self.level = "Medium"
         self.grid = Grid(font, self.level)
-        self.show_preview = False
 
         # ---- menu buttons ----
         self.menu_buttons = {
@@ -70,7 +69,7 @@ class SceneManager:
             "Shuffle": Button((30, 555, 110, 42), "Shuffle"),
             "Hint": Button((150, 555, 90, 42), "Hint", base_color=GOLD, hover_color=(255, 200, 40)),
             "Numbers": Button((250, 555, 110, 42), "Hide #s"),
-            "Preview": Button((370, 555, 110, 42), "Preview"),
+            "Undo": Button((370, 555, 110, 42), "Undo ↶"),
             "Menu": Button((490, 555, 90, 42), "Menu", base_color=(230, 90, 90), hover_color=(200, 60, 60)),
         }
 
@@ -108,8 +107,8 @@ class SceneManager:
                     elif name == "Numbers":
                         self.grid.show_numbers = not self.grid.show_numbers
                         btn.label = "Hide #s" if self.grid.show_numbers else "Show #s"
-                    elif name == "Preview":
-                        self.show_preview = True
+                    elif name == "Undo":
+                        self.grid.undo()
                     elif name == "Menu":
                         self.state = MENU
                     return  # don't also register a tile click
@@ -126,9 +125,6 @@ class SceneManager:
                         self.state = PLAYING
                     elif name == "Menu":
                         self.state = MENU
-
-        if event.type == pygame.MOUSEBUTTONUP and self.state == PLAYING:
-            self.show_preview = False
 
     # -------------------------------------------------------------- draw
     def draw(self, screen):
@@ -149,14 +145,15 @@ class SceneManager:
         sub = self.small.render("A Sliding Puzzle Adventure", True, TEAL)
         screen.blit(sub, sub.get_rect(center=(300, 160)))
 
+        credit = self.small.render("Developed by Hannan Ashraf - Cyber Security Student", True, WHITE)
+        screen.blit(credit, credit.get_rect(center=(300, 185)))
+
         label = self.font.render("Choose difficulty:", True, WHITE)
         screen.blit(label, (210, 265))
 
         for btn in self.menu_buttons.values():
             btn.update(mouse_pos)
             btn.draw(screen, self.font)
-
-        best = self.grid.get_best_score() if self.level == self.grid.level else None
 
     def _draw_playing(self, screen, mouse_pos):
         self.grid.update(mouse_pos)
@@ -170,17 +167,6 @@ class SceneManager:
             f"Time: {int(self.grid.elapsed)}s   |   Moves: {self.grid.strokes}   |   {self.level}",
             True, WHITE)
         screen.blit(stats, (30, 15))
-
-        if self.show_preview:
-            overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
-            overlay.fill((0, 0, 0, 180))
-            screen.blit(overlay, (0, 0))
-            img = pygame.transform.smoothscale(self.grid.full_image, (380, 380))
-            rect = img.get_rect(center=(300, 320))
-            screen.blit(img, rect)
-            pygame.draw.rect(screen, GOLD, rect, 3, border_radius=8)
-            tip = self.small.render("Release to go back", True, WHITE)
-            screen.blit(tip, tip.get_rect(center=(300, 520)))
 
     def _draw_win(self, screen, mouse_pos):
         img = pygame.transform.smoothscale(self.grid.full_image, (340, 340))
