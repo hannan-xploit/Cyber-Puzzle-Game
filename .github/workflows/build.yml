@@ -11,18 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev
-          pip3 install --upgrade pip
-          pip3 install --user --upgrade buildozer cython
+      - name: Cache Buildozer
+        uses: actions/cache@v3
+        with:
+          path: .buildozer
+          key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
 
       - name: Build with Buildozer
-        run: |
-          export PATH=$PATH:~/.local/bin
-          # Clean ki jagah hum direct build chala rahe hain
-          buildozer -v android debug
+        uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          buildozer_version: stable
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
 
