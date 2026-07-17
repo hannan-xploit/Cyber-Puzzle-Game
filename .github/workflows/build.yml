@@ -14,7 +14,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # libtinfo5 ki jagah libtinfo-dev use kar rahe hain
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev
           pip3 install --upgrade pip
           pip3 install --user --upgrade buildozer cython
@@ -22,6 +21,8 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
+          # Cache saaf karne ke liye clean command add ki hai
+          buildozer clean
           buildozer -v android debug
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
