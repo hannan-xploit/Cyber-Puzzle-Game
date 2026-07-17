@@ -1,30 +1,65 @@
 [app]
+
+# (str) Title of your application
 title = Cyber Puzzle Game
+
+# (str) Package name
 package.name = cyberpuzzlegame
+
+# (str) Package domain
 package.domain = org.cyberxploit
 
+# (str) Source code where the main.py live
 source.dir = .
-source.include_exts = py,png,jpg,jpeg,kv,atlas,json,ttf
 
+# (list) Source files to include
+source.include_exts = py,png,jpg,kv,atlas
+
+# (str) Application versioning
 version = 0.1
 
-requirements = python3==3.11.6,pygame==2.1.2,cython==0.29.33
+# (list) Application requirements
+requirements = python3,kivy,pygame
 
+# (str) Presplash of the application
+#presplash.filename = %(source.dir)s/data/presplash.png
+
+# (str) Icon of the application
+#icon.filename = %(source.dir)s/data/icon.png
+
+# (list) Supported orientations
 orientation = portrait
+
+# (bool) Indicate if the application should be fullscreen
 fullscreen = 0
 
-[app:android]
-android.bootstrap = sdl2
+# (int) Target Android API
 android.api = 33
+
+# (int) Minimum API your APK will support
 android.minapi = 24
+
+# (int) Android NDK API to use
+android.ndk_api = 21
+
+# (str) Android NDK version
 android.ndk = 25b
+
+# (str) Android SDK version
 android.sdk = 33
+
+# (str) Hostpython version (Matches container 3.14.2)
+android.hostpython = 3.14.2
+
+# (bool) If True, automatically accept SDK license
 android.accept_sdk_license = True
-android.archs = arm64-v8a, armeabi-v7a
+
+# (str) Android entry point
 android.entrypoint = org.kivy.android.PythonActivity
-android.allow_backup = True
-p4a.branch = develop
 
 [buildozer]
+# (int) Log level (0 = error only, 1 = info, 2 = debug)
 log_level = 2
-warn_on_root = 1
+
+# (int) Display build progress
+display_progress = 1
