@@ -15,8 +15,10 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Permissions set karna zaruri hai
+          # Permissions set karna
           chown -R $(whoami) .
+          # Root bypass aur build
+          export BUILDOZER_ALLOW_ROOT=1
           buildozer -v android debug
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
