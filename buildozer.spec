@@ -46,6 +46,8 @@ android.minapi = 24
 # (int) Android NDK API to use
 android.ndk_api = 21
 
+android.sdk = 33
+
 # (bool) If True, automatically accept SDK license
 android.accept_sdk_license = True
 
