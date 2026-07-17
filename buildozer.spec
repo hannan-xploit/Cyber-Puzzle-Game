@@ -10,7 +10,7 @@ version = 0.1
 
 # IMPORTANT: don't mix kivy + pygame, only pygame is needed here.
 # Pinned versions = far fewer build breaks.
-requirements = python3,pygame==2.1.2,cython==0.29.33
+requirements = python3==3.11.6,pygame==2.1.2,cython==0.29.33
 
 orientation = portrait
 fullscreen = 0
