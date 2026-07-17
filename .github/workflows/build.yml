@@ -14,7 +14,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # openjdk-17-jdk ab default repos mein hai, PPA ki zaroorat nahi
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev
           pip3 install --upgrade pip
           pip3 install --user --upgrade buildozer cython
@@ -22,9 +21,12 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
+          # Buildozer ko force kar rahe hain taake wo naye SDK/NDK path use kare
           buildozer -v android debug
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
+          # Ye path GitHub action ke default environment ke liye set hain
+          BUILDOZER_ALLOW_DEPRECATED: "1"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
