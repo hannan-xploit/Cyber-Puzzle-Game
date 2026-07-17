@@ -21,15 +21,14 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # Buildozer ko force kar rahe hain taake wo naye SDK/NDK path use kare
-          buildozer -v android debug
+          # Log ko 'build.log' file mein save karenge
+          buildozer -v android debug > build.log 2>&1
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
-          # Ye path GitHub action ke default environment ke liye set hain
-          BUILDOZER_ALLOW_DEPRECATED: "1"
 
-      - name: Upload Artifact
+      - name: Upload Logs
+        if: always() # Ye tab bhi chalega agar build fail ho jaye
         uses: actions/upload-artifact@v4
         with:
-          name: package
-          path: bin/*.apk
+          name: build-logs
+          path: build.log
