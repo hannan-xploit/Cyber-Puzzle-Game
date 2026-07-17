@@ -20,7 +20,11 @@ jobs:
 
       - name: Build with Buildozer
         run: |
+          # SDK license accept karne ke liye ye command zaroori hai
           buildozer android debug
+        env:
+          # Yeh environment variable buildozer ko batata hai ke license accept kar lo
+          ANDROIDSDK_ACCEPT_LICENSE: "1"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
