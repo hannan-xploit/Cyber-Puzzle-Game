@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Environment variables yahan set karne se buildozer kabhi prompt nahi karega
+    env:
+      BUILDOZER_ALLOW_ROOT: "1"
+      ANDROIDSDK_ACCEPT_LICENSE: "1"
     container:
       image: kivy/buildozer:latest
     steps:
@@ -15,16 +19,8 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Permissions set karna taake file system access ka issue na ho
-          chown -R $(whoami) .
-          
-          # Root user allow karna aur build process
-          export BUILDOZER_ALLOW_ROOT=1
-          
-          # Debug mode mein build chalana
+          # Chown hata diya hai kyunki container mein zarurat nahi
           buildozer -v android debug
-        env:
-          ANDROIDSDK_ACCEPT_LICENSE: "1"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
