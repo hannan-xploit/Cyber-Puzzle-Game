@@ -2,47 +2,31 @@ name: Build APK
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: kivy/buildozer:latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Free disk space
+      - name: Build with Buildozer
         run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
-          sudo docker image prune -af
-          df -h
+          # Permissions set karna taake file system access ka issue na ho
+          chown -R $(whoami) .
+          
+          # Root user allow karna aur build process
+          export BUILDOZER_ALLOW_ROOT=1
+          
+          # Debug mode mein build chalana
+          buildozer -v android debug
+        env:
+          ANDROIDSDK_ACCEPT_LICENSE: "1"
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install system dependencies (Java from apt, not the broken PPA)
-        run: |
-          sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip \
-            autoconf libtool pkg-config zlib1g-dev libncurses5-dev \
-            libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev \
-            build-essential ccache
-
-      - name: Install buildozer & cython
-        run: |
-          pip install --upgrade pip
-          pip install buildozer cython==0.29.33
-
-      - name: Build APK
-        run: |
-          yes | buildozer android debug
-
-      - name: Upload APK
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: package
