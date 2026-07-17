@@ -8,24 +8,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: kivy/buildozer:latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev
-          pip3 install --upgrade pip
-          pip3 install --user --upgrade buildozer cython
-
       - name: Build with Buildozer
         run: |
-          export PATH=$PATH:~/.local/bin
-          # Conflict khatam karne ke liye pre-installed paths force kar rahe hain
-          export ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/27.3.13750724
-          export ANDROID_HOME=/usr/local/lib/android/sdk
-          # Clean build
-          rm -rf .buildozer
+          # Permissions set karna zaruri hai
+          chown -R $(whoami) .
           buildozer -v android debug
         env:
           ANDROIDSDK_ACCEPT_LICENSE: "1"
