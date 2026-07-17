@@ -21,7 +21,10 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # Purani corrupt cache ko forcefully remove kar rahe hain
+          # Conflict khatam karne ke liye pre-installed paths force kar rahe hain
+          export ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/27.3.13750724
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          # Clean build
           rm -rf .buildozer
           buildozer -v android debug
         env:
