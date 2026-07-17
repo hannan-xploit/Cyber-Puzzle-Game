@@ -1,55 +1,40 @@
 [app]
-
-# (str) Title of your application
 title = Cyber Puzzle Game
-
-# (str) Package name
 package.name = cyberpuzzlegame
-
-# (str) Package domain (needed for android/ios packaging)
 package.domain = org.cyberxploit
 
-# (str) Source code where the main.py live
 source.dir = .
+source.include_exts = py,png,jpg,jpeg,kv,atlas,json,ttf
 
-# (list) Source files to include
-source.include_exts = py,png,jpg,kv,atlas
-
-# (str) Application versioning
 version = 0.1
 
-# (list) Application requirements
-requirements = python3,kivy,pygame
+# IMPORTANT: don't mix kivy + pygame, only pygame is needed here.
+# Pinned versions = far fewer build breaks.
+requirements = python3,pygame==2.1.2,cython==0.29.33
 
-# (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
-
-# (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
-
-# (list) Supported orientations
 orientation = portrait
-
-#
-# Android specific
-#
-
-# (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
 
-# (int) Target Android API
+# icon/presplash - add real files later, keep commented until you have them
+#icon.filename = %(source.dir)s/assets/icon.png
+#presplash.filename = %(source.dir)s/assets/presplash.png
+
+[buildozer]
+log_level = 2
+warn_on_root = 1
+
+[app:android]
+# sdl2 bootstrap is required for pure-pygame apps (not the kivy bootstrap)
+android.bootstrap = sdl2
+
 android.api = 33
-
-# (int) Minimum API your APK will support
 android.minapi = 24
-
-# (int) Android NDK API to use
-android.ndk_api = 21
-
+android.ndk = 25b
 android.sdk = 33
-
-# (bool) If True, automatically accept SDK license
 android.accept_sdk_license = True
-
-# (str) Android entry point
+android.archs = arm64-v8a, armeabi-v7a
 android.entrypoint = org.kivy.android.PythonActivity
+android.allow_backup = True
+
+# use a known-stable p4a branch instead of master (master breaks often)
+p4a.branch = develop
