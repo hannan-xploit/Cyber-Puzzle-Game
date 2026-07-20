@@ -1,27 +1,21 @@
 name: Build APK
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: kivy/buildozer:latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v3
       - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          buildozer_version: stable
         env:
-          BUILDOZER_ALLOW_ROOT: "1"
-          ANDROIDSDK_ACCEPT_LICENSE: "1"
-        run: |
-          buildozer -v android debug
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
         with:
           name: package
           path: bin/*.apk
